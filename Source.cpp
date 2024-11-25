@@ -80,7 +80,7 @@ void CreateColoredTriangle()
 	glEnableVertexAttribArray(1);
 }
 
-void CreateSine()
+void CreateSierpinski()
 {
 	GLfloat CircleVertices[3 * 3 * 3 * 3 * 3 * 3 * 6] = {};
 
@@ -199,7 +199,7 @@ int Init()
 	CompileShader("VS.glsl", "FS.glsl", BasiceprogramId);
 	//CreateTriangle();
 	//CreateColoredTriangle();
-	CreateSine();
+	CreateSierpinski();
 
 	glClearColor(0, 0.5, 0.5, 1);
 
