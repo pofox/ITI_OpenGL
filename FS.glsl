@@ -9,6 +9,6 @@ void main()
 		gl_FragColor = vec4(0.5f,0.0f,0.0f,1);
 	}
 	else{
-		gl_FragColor = vec4(0.0f,0.5f,0.0f,1);
+		gl_FragColor = vec4(0.0f,0.5f,0.0f,frag_color.y>=0.2?1:frag_color.y<=-0.5?0:(frag_color.y+0.5)/0.7);
 	}
 }

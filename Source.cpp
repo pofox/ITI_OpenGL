@@ -5,6 +5,7 @@
 #include<gl\glm\glm.hpp>
 #include<gl\glm\gtc\type_ptr.hpp>
 #include<gl\glm\gtx\transform.hpp>
+#include <vector>
 
 using namespace std;
 using namespace glm;
@@ -34,6 +35,8 @@ GLuint InitShader(const char* vertex_shader_file_name, const char* fragment_shad
 const GLint WIDTH = 600, HEIGHT = 600;
 GLuint VBO_Triangle, VBO_Cube, IBO, BasiceprogramId;
 DrawingMode Current_DrawingMode = DrawingMode::FilledTriangle;
+
+vector<glm::vec3> rands;
 
 // transformation
 GLuint modelMatLoc, viewMatLoc, projMatLoc;
@@ -210,6 +213,18 @@ int Init()
 
 	glClearColor(0, 0.5, 0.5, 1);
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	for (int i = 0; i < 200; i++)
+	{
+		float r1 = (rand() % 1000) / 1000.0f - 0.5f;
+		r1 = abs(r1) > 0.2 ? r1 : 0.2 * sign(r1);
+		float r2 = (rand() % 1000) / 1000.0f - 0.5f;
+		r2 = abs(r2) > 0.2 ? r2 : 0.2 * sign(r2);
+		rands.push_back(glm::vec3(r1, 0.2, r2));
+		rands.push_back(glm::vec3((rand() % 10) / 10.0f, (rand() % 10) / 10.0f, (rand() % 10) / 10.0f));
+	}
 
 	return 0;
 }
@@ -273,12 +288,18 @@ void Render(glm::vec3 camerapos)
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
 
 	// draw triangle
-	/*ModelMat = glm::translate(glm::vec3(0.8, 0, 0.0f)) *
-	glm::rotate(theta * 180 / 3.14f, glm::vec3(0, 0, 1))*
-		glm::scale(glm::vec3(0.5f, 0.5f, 0.5f));
-	glUniformMatrix4fv(modelMatLoc, 1, GL_FALSE, glm::value_ptr(ModelMat));*/
 	
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	for (int i = 0; i < rands.size(); i+=2)
+	{
+		rands[i].y = rands[i].y >= -0.5 ? (rands[i].y - (rand() % 100) / 10000.0f-0.001) : 0.2;
+		ModelMat = glm::translate(rands[i]) *
+		glm::rotate(theta * 180 / 3.14f*10, rands[i+1]) *
+		glm::scale(glm::vec3(0.05f, 0.05f, 0.0f));
+		glUniformMatrix4fv(modelMatLoc, 1, GL_FALSE, glm::value_ptr(ModelMat));
+	
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+	}
+	
 
 }
 
