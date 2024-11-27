@@ -82,7 +82,7 @@ void CreateColoredTriangle()
 
 void CreateSierpinski()
 {
-	GLfloat CircleVertices[3 * 3 * 3 * 3 * 3 * 3 * 6] = {};
+	GLfloat CircleVertices[1000 * 6] = {};
 
 	float A[16] = {
 		0.5,0,0,0,
@@ -105,10 +105,10 @@ void CreateSierpinski()
 
 	float x = sizeof(CircleVertices) / sizeof(GLfloat);
 
-	for (int i = 0; i < x; i+=6)
+	for (int i = 0; i < x; i += 6)
 	{
 		int d = i;
-		for (int j = 0; j < 10; j++)
+		for (int j = 0; j < 100; j++)
 		{
 			/*if (j == 1)
 			{
@@ -225,9 +225,9 @@ void Render()
 	default:
 		break;
 	}
-	
+
 	glPointSize(5);
-	glDrawArrays(GL_POINTS, 0, 3*3*3*3*3*3);
+	glDrawArrays(GL_POINTS, 0, 1000);
 }
 
 float theta = 0;
