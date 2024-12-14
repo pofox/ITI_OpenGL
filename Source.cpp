@@ -23,7 +23,7 @@ struct Vertex
 
 sf::Vector2f mousepos, paddelpos;
 vec3 ballpos, dir;
-float speed = 0.1;
+float speed = 0.5;
 bool start = true,lose=false;
 GLuint bblocks,bblocks2;
 
@@ -67,8 +67,8 @@ float map1(vec3 p) {
 		{
 			float block = fBoxCheap(p + vec3(((i % 4) / 3.0) * 20 - 10, -26 + (i / 16) * 6, (i / 4) % 4 / 3.0 * 20 - 10), vec3(2, 2, 2));
 			res = fOpUnion(res, block);
-			tbblocks >> 1;
 		}
+		tbblocks = tbblocks/2;
 	}
 	for (int i = 0; i < 32; i++)
 	{
@@ -76,8 +76,8 @@ float map1(vec3 p) {
 		{
 			float block = fBoxCheap(p + vec3(((i % 4) / 3.0) * 20 - 10, -14 + (i / 16) * 6, (i / 4) % 4 / 3.0 * 20 - 10), vec3(2, 2, 2));
 			res = fOpUnion(res, block);
-			tbblocks2 >> 1;
 		}
+		tbblocks2 = tbblocks2/2;
 	}
 	// result
 
@@ -236,33 +236,35 @@ void Update()
 	}
 	if (map1(-ballpos) <= 0.001)//collision
 	{
+		GLuint val = 0,val2=0;
 		if (ballpos.y - dir.y < -16)
 		{
 			int x = (ballpos.x + 10) * 4 / 20;
 			int y = round((ballpos.y + 26) / 6.0);
 			int z = (ballpos.z + 10) * 4 / 20;
-			GLuint val = 1;
+			val = (4 * z + 16 * y + x) != 0;
 			for (int i = 0; i < (4 * z + 16 * y + x); i++)
 			{
-				val <<= 1;
+				val *= 2;
 			}
-			val = ~val;
-			bblocks &= val;
 		}
-		else if(ballpos.y - dir.y > -16 && ballpos.y - dir.y<-6) {
-			int x = (ballpos.x + 10) * 4 / 20;
-			int y = round((ballpos.y + 14) / 6.0);
-			int z = (ballpos.z + 10) * 4 / 20;
-			GLuint val = 1;
+		else if(ballpos.y - dir.y > -16 && ballpos.y - dir.y<0) {
+			int x = (ballpos.x-dir.x + 12) * 4 / 24;
+			int y = round((ballpos.y-dir.y + 14) / 6.0);
+			int z = (ballpos.z -dir.z+ 12) * 4 / 24;
+			val2 = (4 * z + 16 * y + x) != 0;
 			for (int i = 0; i < (4 * z + 16 * y + x); i++)
 			{
-				val <<= 1;
+				val2 *= 2;
 			}
-			val = ~val;
-			bblocks2 &= val;
 		}
 		dir = reflect(-dir, getNormal(-ballpos));
-		
+		val = ~val;
+		val2 = ~val2;
+		bblocks &= val;
+		bblocks2 &= val2;
+		//if value changed 
+		//break;
 	}
 }
 

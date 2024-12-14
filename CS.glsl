@@ -940,8 +940,8 @@ vec2 map(vec3 p) {
 			float blockID = 1.0;
 			vec2 block = vec2(blockDist, blockID);
 			res = fOpUnionID(res,block);
-			t1=t1>>1;
 		}
+		t1=t1/2;
 	}
 	for(int i = 0; i < 32; i++)
 	{
@@ -951,8 +951,8 @@ vec2 map(vec3 p) {
 			float blockID = 1.0;
 			vec2 block = vec2(blockDist, blockID);
 			res = fOpUnionID(res,block);
-			t2=t2>>1;
 		}
+		t2=t2/2;
 	}
 	// bounds
 	pMirrorOctant(p.xz, vec2(0, 0));
